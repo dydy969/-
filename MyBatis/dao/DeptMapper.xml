@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 마이바티스 3 Mapper DTO -->
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <!-- 최상위 -->
+<mapper namespace="dao.DeptDao">
+  
+ <select id="selectByDeptno" parameterType="int" resultType="dto.Dept">
+ 	SELECT * FROM dept
+ 	WHERE deptno = #{deptno}
+ </select>
+ 
+ <select id="selectAll" resultType="dto.Dept">
+ 	SELECT * FROM dept
+ 	ORDER BY deptno
+ </select>
+ 
+ <select id="selectByDeptname" parameterType="String" resultType="dto.Dept">
+ 	SELECT * FROM dept
+ 	<!-- WHERE dname = #{dname} -->
+ 	WHERE dname = #{value}
+ </select>
+  
+ <select id="selectByDept" parameterType="dto.Dept" resultType="dto.Dept">
+ 	SELECT * FROM dept
+ 	WHERE dname = #{dname}
+
+ </select>
+  
+ <insert id="insert" parameterType="dto.Dept">
+ 	INSERT INTO dept(deptno, dname, loc)
+ 	VALUES (#{deptno}, #{dname}, #{loc})
+ </insert>
+  <!-- parameter가 있으면 매개변수가 있는거고 
+  		parameter가 없으면 매개변수가 없는거다 -->
+</mapper>
