@@ -1,0 +1,351 @@
+마이바티스
+스프링
+라이브러리, Library
+특정 기능을 개발하기 위한 API 모음
+API : 프로그램을 개발하기 위한 코드(클래스, 인터페이스)들의 모음
+
+프레임워크, Framework
+뼈대, 기반구조, 체계
+
+문제를 해결하기 위해 여러 요소들(클래스, 인터페이스)을 짜여진 규칙에 맞게 개발할 수 있도록 개발 규칙(원칙)까지 정해놓은 것
+
+라이브러리 vs 프레임워크
+라이브러리는 개발에 필요한 API를 단순히 모아놓은 것에 가깝고 프레임 워크는 라이브러리와 달리 API들의 사용절차(개발방식)까지 포함하는 경우가 많다
+
+라이브러리는 응용 프로그램의 흐름이 개발자의 코드에 따라 직접 제어한다
+
+프레임워크는 프레임워크에 의해서 프로그램 흐름이 제어된다
+프로그램을 구성하는 API를 
+	내가 호출해서 사용하면 라이브러리
+	내가 만들어둔 코드를 가져가서 동작되면 프레임워크
+	→ IoC, Inversion of Control, 제어의 역전
+마이바티스 프레임워크, MyBatis
+퍼시스턴스 계층 프레임워크(Persistence Layer)
+DAO - DB연결 구조 (JDBC)
+JDBC관련 개발을 편하게 만들어준다
+JDBC프레임워크, 데이터베이스 관리 프레임워크
+
+스프링 프레임워크, Spring
+자바언어를 이용한 프로그램 개발 프레임워크
+MVC 패턴 기반의 프레임워크
+마이바티스, MyBatis
+사용자 가이드 URL
+	https://mybatis.org/mybatis-3/ko/index.html
+데이터베이스와 자바객체(DAO)를 연결(매핑)해주는 JDBC 자동화 프레임워크
+JDBC를 편하게 사용할 수 있게 해준다
+JDBC의 동작을 캡슐화하여 제공한다
+(Connection, PrepareStatement → SQL 쿼리를 DB에 전송 → 결과 → close)
+장점
+SQL코드 와 프로그램 코드를 분리하여 관리할 수 있다
+IBatis 는 MyBatis 의 예전 버전 이름
+iBatis는 Apache Foundation에서 프로젝트로 존재하던 것
+MyBatis는 전체 프로젝트가 구글에 넘어가면서 이름을 바꾼 것
+	
+	iBatis : JDK 1.4 이전
+	MyBatis : JDK 1.5 이후
+마이바티스 기본 세팅
+라이브러리 설치
+	mybatis-x.x.x.x.jar
+	ojdbcX.jar
+마이바티스 설정 파일 작성 (XML 파일)
+	configuration XML 파일( 마이바티스의 DB접속 설정 파일)
+
+		 mybatis/mybatis-config.xml
+
+마이바티스 Connection Factory 클래스 작성    
+	마이바티스를 이용한 DB연결객체를 생성하는 클래스 (싱글톤으로 개발)
+
+	sqlSessionFactory 클래스의 인스턴스를 싱글톤으로 생성하고 관리한다
+	
+	**sqlSession 클래스
+		DB쿼리(SQL) 작업 수행 객체
+
+	**sqlSessionFactory 클래스
+		설정항목을 불러들여 SqlSession 객체를 생성하는 객체
+
+	**sqlSessionFactoryBuilder 클래스
+	설정파일(XML)을 읽어들여 SqlSessionFactory 객체를 생성하는 객체
+	
+DAO 파일 작성 (interface)
+		마이바티스와 연결되는 자바 객체
+
+Mapper 파일 작성(XML)
+	마이바티스에 적용할 쿼리 매퍼 파일
+
+DTO 파일 작성 (class)
+	테이블 정보를 전달하거나 전달받는 객체 ( 도메인, 모델 객체 )
+
+Controller 파일 작성 (실행 클래스, main())
+	sqlSessionFactory 클래스를 이용하여 SqlSession 객체를 생성한다
+
+	SqlSession 객체를 이용하여 DB쿼리를 수행한다
+	(마이바티스 동작을 수행시킨다)
+<resultMap> 태그
+마이바티스 Mapper에서 사용할 수 있는 태그 중 하나
+테이블의 컬럼명과 DTO의 멤버필드명이 다를 때 조회된 결과(ResultSet)를 매핑하는 태그
+조회된 컬럼명과 멤버필드명이 같을 때 자동으로 매핑된다
+다를 때는 <resultMap>을 활용하여 직접 매핑되도록 설정한다
+<resultMap>을 사용하지 않는 다면 SQL의 Alias를 이용할 수 있다
+	ex) 	SELECT board_no AS boardNo FROM ….
+<resultMap> 태그의 속성
+id : 생성하는 resultMap의 이름을 지정하는 속성
+	(주로 DTO의 클래스명으로 짓는다)
+
+type : resultMap으로 매핑될 실제 존재하는 DTO클래스를 설정하는 속성
+	(패키지까지 포함한 풀네임으로 클래스명을 적는다)
+
+
+
+
+
+<resultMap> 태그의 하위 태그
+<id>  : 키값에 해당하는 컬럼을 지정할 때 사용
+<result> : 키값이 아닌 컬럼을 지정할 때 사용
+	** 둘다 column속성으로 컬러명 , property속성으로 필드명을 명시한다
+<constuctor> : 생성자 지정 태그
+	<resultMap> 으로 매핑된 결과에 초기 값을 넣을 때 사용한다
+
+<asscociation> : <resultMap>의 1:1 관계의 객체를 설정할 때 사용한다
+<collection> : <resultMap>의 1:다 관계의 객체를 설정할 때 사용한다
+	
+ex) 
+// 1:1관계
+class Board{
+	int boardno;
+	BoardFile file;
+}
+// 1:M 관계
+class Board{
+	int boardno;
+	BoardFile[] file;
+}
+
+<selectKey> 태그
+자동 생성 키(auto increment)를 지원 하지 않는 데이터베이스(ex. 오라클DB)에서 사용하는 키 생성 태그
+<insert> 태그 안에서 사용한다 
+주로 PK 값을 생성하는 데 사용되는 태그
+
+<selectKey> 태그의 속성
+order
+	BEFORE : insert쿼리 수행 전에 selectKey가 동작하도록 설정
+AFTER : insert쿼리 수행 후에 selectKey가 동작하도록 설정
+
+resultType
+	조회결과 값의 데이터 타입 (자바 타입)
+
+keyProperty
+	결과값이 매핑될 프로퍼티이름 지정 (parameterType의 멤버 필드명)
+	
+statementType
+	Statement, PreparedStatement, Callable 중 선택할 수 있다
+	기본값은 PreparedStatement
+	
+	** Callable은 PL/SQL 사용할 때 적용한다
+사용예시
+	<insert id="insert" parameterType="web.dto.test_member" >
+	
+	<selectKey order="BEFORE" resultType="int" keyProperty="no">
+		SELECT test_member_seq.nextval FROM dual
+	</selectKey>
+		
+	INSERT INTO test_member(no, id, pw)
+	VALUES(#{no}, #{id}, #{pw})
+	</insert>
+
+<insert id="insert" parameterType="web.dto.test_member" >
+	
+	INSERT INTO test_member(no, id, pw) 
+	VALUES(test_member_seq.nextval, #{id}, #{pw})
+	
+	<selectKey order="AFTER" resultType="int" keyProperty="no">
+		SELECT test_member_seq.currval FROM dual 
+		SELECT max(no) FROM test_member 
+	</selectKey> 
+
+</insert>
+동적 SQL 쿼리
+동적(Dynamic)으로 변화되어야하는 SQL쿼리를 작성할 수 있도록 도와주는 마이바티스 태그
+<select>, <insert>, <update>, <delete> 안에서 사용한다
+<if>, <choose>, <trim>, <foreach> 태그를 제공한다
+
+<if>태그
+test속성의 값을 이용하여 조건문을 지정한다
+test속성의 값은 “true” / “false” 가 되도록 만든다
+test속성의 값은 문자열로 처리된다
+“true” 나 “false”가 아니면 “true” 로 취급한다
+조건의 결과에 따라 쿼리의 추가 여부가 결정된다
+	<select id= ”” parameterType=”web.dto.Emp”>
+SELECT * FROM emp
+WHERE 1=1
+<if test=”empno != null ”>
+	AND empno = #{empno }
+</if>
+
+<if test=”ename != null and !ename.equals(‘’)”>
+	AND ename = #{ename}
+</select> 
+
+ex) parameterType 이 “String”일 경우 value 키워드 사용을 고려할 것!
+<select id=”” parameterType = “String” >
+	SELECT * FROM test
+	<if test=”value == null”>
+		WHERE testid = #{value}
+	</if>
+</select>
+
+<choose>, <when>, <otherwise> 태그
+if ~ else if ~ else 구문과 비슷한 제어문 태그
+<choose>안에 <when> 태그로 조건문을 작성한다
+<when> 태그에 test 속성으로 조건을 작성하여 else if 같은 역할을 한다
+<when> 태그 들의 마지막으로 <otherwise> 태그를 사용하여  else 같은 역할을 한다
+		ex) <choose>
+			<when test=”조건문1” >
+			</when>
+			<when test=”조건문2” >
+			</when>
+			…..
+			<otherwise>
+			</otherwise>
+		<choose>
+<trim> 태그
+WHERE 절이나 UPDATE의 SET절에서 사용된다
+동적쿼리가 전달파라미터에 따라 추가 되지 않는 상황에서 AND 나 OR 같은 키워드가 충돌할 수 있는 상황에서 사용한다
+SET절에서는 마지막 ‘,’를 고려해서 사용한다
+<trim> 태그의 속성
+prefix : 접두어 지정
+prefixOverrides : 접두어로 설정한 값과 겹쳐지묜 제거할 항목을 지정
+suffix : 접미어 지정
+suffixOverrides : 접미어로 설정한 값과 합쳐지면 제거할 항목을 지정
+<foreach> 태그
+반복되는 구문을 동적으로 생성할 때 사용하는 태그
+배열/해시맵 타입의 파라미터를 처리할 때 유용하다
+마이바티스의 전달파라미터는 jasjmap으로 처리하는 것이 좋다
+배열이나 리스트는 해쉬맵에 put하여 전달한다
+	ex)	checkbox 선택 항목에 대한 조건 처리를 할 때 유용하다
+
+마이바티스의 SqlSession 객체의 구문을 실행하는 메소드
+<T> T selectOne(String statement, Object Parameter)
+	하나의 객체를 리턴하는 조회 구문 수행 메소드
+
+<E> List<E> selectList(String statement, Object Parameter)
+	한 개 이상의 객체를 리턴하는 조회 구문 수행 메소드
+
+<K, V> Map<K,V> selectMap(String statement, Object Parameter, String mapKey)
+	결과 데이터를 Map으로 변환하기 위해 제공되는 메소드
+
+<T> Cursor<T> selectCursor(String statement, Object Parameter)
+	결과 데이터를 Cursor객체로 반환하는 메소드
+
+int insert(String statement, Object parameter) 
+int update(String statement, Object parameter) 
+int delete(String statement, Object parameter) 
+	반환데이터는 SQL구문에 의해 영향을 받은 레코드(행) 수를 나타낸다
+
+** 위 모든 메소드들은 Object parameter 없이 호출될 수 있도록 오버로딩되어있음
+
+마이바티스 매퍼의 쿼리 수행 태그
+<select>, <insert>, <update>, <delete>
+수행할 SQL 쿼리에 맞게 태그를 골라 작성하면 된다
+쿼리와 똑같지 않은 태그를 사용해도 실행은 되지만 되도록 일치시키도록 한다
+
+
+공통 속성
+id 	.
+	해당 매퍼 파일(XML)에서 유일한 값으로 설정한다
+	해당 네임스페이스에서 구분자(식별값) 역할을 수행한다
+
+	DAO인터페이스의 추상메소드의 이름과 같은 이름으로 작성하도록 한다
+
+parameterType	.
+	쿼리 수행에 필요한 전달 파라미터의 데이터타입을 명시하는 속성
+	
+flushCache
+	구문이 실행될 때마다 캐시를 지울 것인지 설정하는 항목(기본값은 false)
+
+timeout
+	데이터베이스 처리 결과를 기다리는 최대 시간
+
+statementType
+	쿼리 수행방식에 대한 설정
+	Statement, PreparedStatement(기본값), Callable 중 선택
+<select> 요소 전용 속성
+resultType	.
+	SELECT 수행 결과(ResultSet)를 처리할 데이터타입( 실제 데이터타입)
+	참조형(DTO)라면 패키지까지 포함하여 풀네임으로 작성한다
+
+resultMap	.
+	SELECT 수행 결과(ResultSet)를 처리할(resultMap)
+	<resultMap> 태그를 이용하여 생성한 id 를 이용한다
+
+useCache
+	구문의 결과를 캐시에 저장할 것인지 설정하는 항목(기본값은 true)
+
+fetchSize
+	SELECT 결과를 한번에 가져올 크기(개수)를 설정하는 속성
+
+	기본값 10
+	** 대용량 데이터 처리가 필요하면 1000개 정도를 설정하는 편
+
+resultSetType
+	조회 결과값을 읽어오는 동작에 대한 설정
+	DB의 커서객체 동작을 설정함
+	
+	FORWARD_ONLY
+	SCROLL_SENSITIVE
+	SCROLL_INSENSITIVE
+
+마이바티스의 내장 Cache(캐시)
+2가지 내장 캐시가 존재함
+	
+	Local Session Cache
+	Second Level Cache (2nd Level)
+Local Session Cache (Session Level Cache)
+sqlSession 객체마다 가지고 있는 캐시
+개발자가 임의로 기능을 해제할 수 없다
+
+Second Level Cache
+Mapper 의 namespace마다 존재하는 캐시
+
+마이바티스 TypeAlias
+마이바티스 쿼리 수행 태그의 속성을 ParameterType, resultType을 설정할때 DTO(VO)의 패키지까지 포함한 풀네임을 적용해야한다
+패키지의 길이가 길어질 경우 불편함을 줄이기위해 TypeAlias를 이용해 DTO의 별칭을 붙여 사용할 수 있다
+오히려 유지보수성을 떨어뜨리는 경우도 있어 조심히 사용해야한다
+
+TypeAlias 적용방법 2가지
+마이바티스 Configuration XML 파일에서 <settings>밑에 <environments> 위에 작성해야한다
+클래스 단위로 등록하기
+<typeAliases>
+	<typeAlias type="web.dto.Emp" alias="Emp" />
+</typeAliases>
+
+패키지 단위로 등록하기
+<typeAliases>
+	<package name="web.dto"/>
+</typeAliases>
+** 등록 된 패키지의 DTO 클래그의 정의코드 위 @Alias(“별칭”)을 이용하여 직접
+ 별칭을 지정할 수 있다
+	** Alias를 사용하지 않으면 클래스명으로 적용된다
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
