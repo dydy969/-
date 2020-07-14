@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dynamic.dao.DynamicQueryDao">
+	<!-- -->
+	<select id="select" resultType="hashmap">
+		select * from test_member
+
+		<!-- true이면 , false이면 차이가 뭐지???!!! -->
+		<if test="true">
+			order by no
+		</if>
+	</select>
+
+
+
+	<select id="select3" parameterType="web.dto.Emp" resultType="web.dto.Emp">
+		select * from emp
+		where 1=1
+		<if test='empno != null '>
+			and empno=#{empno}
+		</if>
+		<if test='ename != null and !ename.equals("")'>
+			or ename LIKE '%' || #{ename} || '%'
+		</if>
+	</select>
+
+	
+	<select id="select2" parameterType="string"
+		resultType="web.dto.Emp">
+
+		select * from emp
+
+		<!-- 옛날 mybatis 버전은 ename을 value로 해야한다 -->
+		<if test='ename != null and !ename.equals("") '>
+			<!-- #{ename} 은 '' 가 있는 채로 반환된다 따라서 '#{ename}' 로 하면 안된다 -->
+			where ename LIKE '%' || #{ename} || '%'
+		</if>
+
+
+		<!-- true이면 쿼리가 실행되고 , false이면 실행이되지 않는다 test에 잘못 적으면 무조건 true가 된다 이걸 조심해야한다 
+			잘못적는다고 에러 안난다 -->
+		<if test="false">
+			order by no
+		</if>
+	</select>
+
+	<select id="select4" parameterType="hashmap" resultType="web.dto.Emp">
+		select * from emp
+
+		<trim prefix="WHERE" prefixOverrides="AND||OR">
+			<choose>
+				<when test="category.equals('ename') ">
+					AND ename=#{keyword}
+				</when>
+				<!-- 문자열 비교는 equals()를 쓰도록 하자 -->
+				<when test="category.equals('job') ">
+					AND job=#{keyword}
+				</when>
+			</choose>
+		</trim>
+	</select>
+	
+	<!-- trim 태그 사용 예시 1 -->
+<!-- 	<select id="select4"> -->
+<!-- 		SELECT * FROM emp -->
+<!-- 		WHERE deptno = 10 -->
+<!-- 		<trim prefix="AND (" prefixOverrides="OR" suffix=")"> -->
+<!-- 		<if test="job != null"> -->
+<!-- 			OR job LIKE '%' || #{job} |} '%' -->
+<!-- 		</if> -->
+<!-- 		<if test="job != null"> -->
+<!-- 			OR sal > #{sal} -->
+<!-- 		</if> -->
+<!-- 		</trim> -->
+<!-- 	</select> -->
+
+
+	<!-- trim 태그 사용 예시 2 -->
+<!-- 	<update id="update"> -->
+<!-- 		UPDATE emp -->
+		
+<!--     	<trim prefix="SET" suffixOverrides=","> -->
+<!-- 			<if test="ename != null"> -->
+<!-- 				ename = #{ename}, -->
+<!-- 			</if> -->
+<!-- 			<if test="job != null"> -->
+<!-- 				job = #{job},			 -->
+<!-- 			</if> -->
+<!-- 			<if test="deptno != null"> -->
+<!-- 				deptno = #{deptno}, -->
+<!-- 			</if> -->
+<!-- 	    </trim> -->
+<!-- 		WHERE empno = #{empno} -->
+<!-- 	</update>	 -->
+
+	<select id="selectCheckbox" parameterType="hashmap" resultType="EmpDTO">
+		SELECT * FROM emp
+		<if test="deptnoArr != null">
+		WHERE deptno IN
+		<foreach collection="deptnoArr" item="deptno" open="(" close=")" separator=",">
+			#{deptno}
+		</foreach>
+		</if>
+	</select>
+
+</mapper>

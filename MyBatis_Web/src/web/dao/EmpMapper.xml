@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 마이바티스 3 Mapper DTO -->
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="web.dao.EmpDao">
+
+
+	<resultMap type="web.dto.Emp" id="E">
+
+		<!-- <result column="user_name" property="userName"/> -->
+		<!-- id는 pk -->
+		<id column="empno" property="empno" />
+
+		<result column="ename" property="ename" />
+		<result column="job" property="job" />
+		<result column="mgr" property="mgr" />
+		<result column="hiredate" property="hiredate" />
+		<result column="sal" property="sal" />
+		<result column="comm" property="comm" />
+		<result column="deptno" property="deptno" />
+	</resultMap>
+
+	<sql id="selectEmp">
+		SELECT * FROM emp
+	</sql>
+
+	<sql id="whereCond">
+		WHERE empno = #{empno}
+	</sql>
+
+	<!-- <select id="selectCountAll"> -->
+	<!-- SELECT count(*) from ( -->
+	<!-- <include refid="selectEmp" /> -->
+	<!-- ) -->
+	<!-- </select> -->
+
+	<!-- <select id="selectAll" resultType="web.dto.Emp"> -->
+	<select id="selectAll" resultMap="E">
+		<include refid="selectEmp" />
+		ORDER BY empno
+	</select>
+
+	<select id="empnoDetail" parameterType="web.dto.Emp"
+		resultType="web.dto.Emp">
+		<include refid="selectEmp" />
+		<include refid="whereCond" />
+	</select>
+
+	<!-- ============================ -->
+
+
+	<insert id="insert" parameterType="web.dto.test_member" >
+	
+		<selectKey order="BEFORE" resultType="int" keyProperty="no">
+			SELECT test_member_seq.nextval FROM dual
+		</selectKey>
+		
+		INSERT INTO test_member(no, id, pw)
+		VALUES(#{no}, #{id}, #{pw})
+
+<!-- 		INSERT INTO test_member(no, id, pw) -->
+<!-- 		VALUES(test_member_seq.nextval, #{id}, #{pw}) -->
+	
+<!-- 		<selectKey order="AFTER" resultType="int" keyProperty="no"> -->
+<!-- 			SELECT test_member_seq.currval FROM dual -->
+<!-- 			SELECT max(no) FROM test_member -->
+<!-- 		</selectKey> -->
+		
+	</insert>
+
+
+
+	<!-- parameterType : 처음 empno -> 수정 web.dto.Emp -->
+</mapper>
