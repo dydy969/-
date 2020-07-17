@@ -1,0 +1,15 @@
+package dept.dao;
+
+import java.util.List;
+
+import dept.dto.Dept;
+
+public interface DeptDao {
+
+	public List<Dept> selectAll();
+
+	public Dept deptDetail(Dept dept);
+
+	public void deptInsert(Dept dept);
+
+}
